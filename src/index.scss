@@ -1,0 +1,48 @@
+@use './_shared.scss';
+
+@import url('https://fonts.googleapis.com/css2?family=Bai+Jamjuree:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&family=Jaldi:wght@400;700&family=Oswald:wght@200..700&display=swap');
+
+body {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  background: shared.$background-color;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+}
+.main {
+  font-size: clamp(18px, 1.5vw, 1.5rem);
+}
+
+h1 {
+  font-size: clamp(24px, 5vw, 3.375rem);
+  color: shared.$main-color;
+  margin: 0;
+  margin-left: 20px;
+  text-align: center;
+  font-weight: lighter;
+  & span {
+    position: relative;
+  }
+  & span:after {
+    content: '';
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    height: 15px;
+    width: 100%;
+    background: shared.$main-color;
+    transform: rotate(-5deg) skew(-5deg);
+    z-index: -1;
+  }
+  @media all and (max-width: 430px) {
+    margin-left: 0;
+  }
+}
+
+h2 {
+  font-size: clamp(22px, 3vw, 2.5rem);
+  font-weight: lighter;
+  color: shared.$main-color;
+}
