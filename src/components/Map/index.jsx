@@ -5,49 +5,64 @@ import {
   Popup,
   LayerGroup,
   Circle,
-} from 'react-leaflet'; // Importing components from react-leaflet for map rendering
-import './Map.scss'; // Importing the stylesheet for styling the Map component
+} from 'react-leaflet';
+import './Map.scss';
 
-// The Map component displays a map with markers for IP and geolocation positions
-const Map = ({ IpLat, IpLon, geoLat, geoLon }) => {
-  let position = []; // Array to hold the calculated position for the map center
-  const fillBlueOptions = { fillColor: 'red', color: 'red' }; // Options for the circle's appearance
+const Map = ({ IpLat, IpLon, geoLat, geoLon, recommendations }) => {
+  
+  let position = [];
+  const fillBlueOptions = { fillColor: 'red', color: 'red' };
 
-  // Calculate the average position if both geolocation coordinates are provided
+  // Calculate the position to center the map
   if (geoLat && geoLon) {
-    const averageLat = (IpLat + geoLat) / 2; // Average latitude
-    const averageLon = (IpLon + geoLon) / 2; // Average longitude
-    position = [averageLat, averageLon]; // Set position to the average
+    const averageLat = (IpLat + geoLat) / 2;
+    const averageLon = (IpLon + geoLon) / 2;
+    position = [averageLat, averageLon];
   } else {
-    position = [IpLat, IpLon]; // Default to IP coordinates if geolocation isn't available
+    position = [IpLat, IpLon];
   }
 
   return (
-    <div id="map"> {/* Container for the map */}
-      <MapContainer center={position} zoom={7} scrollWheelZoom={true}> {/* Map container with initial position and zoom level */}
+    <div id="map">
+      <MapContainer center={position} zoom={12} scrollWheelZoom={true}>
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' // Attribution for the tile layer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" // URL template for the tile layer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[IpLat, IpLon]}> {/* Marker for the IP position */}
-          <Popup>Your current IP position.</Popup> {/* Popup displaying the IP position message */}
+        
+        {/* Circle at the IP location */}
+        <Circle
+          center={[IpLat, IpLon]}
+          pathOptions={fillBlueOptions}
+          radius={6000}
+        />
+
+        {/* Marker for the current IP position */}
+        <Marker position={[IpLat, IpLon]} icon={new L.Icon({ iconUrl: 'path/to/highlighted-marker-icon.png', iconSize: [25, 41] })}>
+          <Popup>Your current IP position.</Popup>
         </Marker>
-        {/* Render geolocation circle and marker if geolocation coordinates are available */}
-        {geoLat !== '' && geoLon !== '' && (
-          <LayerGroup> {/* Grouping layers for geolocation */}
-            <Circle
-              center={[geoLat, geoLon]} // Center of the circle at the geolocation coordinates
-              pathOptions={fillBlueOptions} // Styling options for the circle
-              radius={6000} // Radius of the circle in meters
-            />
-            <Marker position={[geoLat, geoLon]} style={{ color: 'red' }}> {/* Marker for the geolocation position */}
-              <Popup>Your current geolocation position.</Popup> {/* Popup displaying the geolocation position message */}
+
+        {/* Marker for the geolocation position if available */}
+        {geoLat && geoLon && (
+          <LayerGroup>
+            <Marker position={[geoLat, geoLon]}>
+              <Popup>Your current geolocation position.</Popup>
             </Marker>
           </LayerGroup>
         )}
+        
+        {/* Display recommendations as markers */}
+        {recommendations.map((rec, index) => (
+          <Marker key={index} position={[rec.lat, rec.lng]}>
+            <Popup>
+              <strong>{rec.name}</strong><br />
+              {rec.vicinity} {/* Adjust this to display relevant recommendation information */}
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
     </div>
   );
 };
 
-export default Map; // Exporting the Map component for use in other parts of the application
+export default Map;
