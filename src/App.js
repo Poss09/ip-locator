@@ -3,6 +3,7 @@ import Header from "./components/Header/"; // Importing the Header component
 import Datas from "./components/Datas/"; // Importing the Datas component to display information
 import Map from "./components/Map/"; // Importing the Map component to display geolocation
 import "./_shared.scss"; // Importing shared styles
+import RecommendedPlaces from "./components/RecommendedPlaces";
 
 function App() {
   // State variables to manage IP data and geolocation information
@@ -133,7 +134,6 @@ function App() {
 
   return (
     <div className="main">
-      {" "}
       {/* Main container for the app */}
       <Header /> {/* Render the Header component */}
       <Datas
@@ -150,20 +150,23 @@ function App() {
         ipRegion={IpDatas.region} // Pass region from IP data
         recommendations={recommendations}
       />
-      {isMapReady ? ( // Check if the map is ready to be displayed
-        <Map
-          IpLat={lat}
-          IpLon={lon}
-          geoLat={geoLat}
-          geoLon={geoLon}
-          recommendations={recommendations.map(place => ({
-            lat: place.geometry.location.lat,
-            lng: place.geometry.location.lng,
-            name: place.name,
-            vicinity: place.vicinity,
-            icon: place.icon,
-          }))}
-        /> // Render the Map component with coordinates
+      {isMapReady ? (
+        <>
+          <Map
+            IpLat={lat}
+            IpLon={lon}
+            geoLat={geoLat}
+            geoLon={geoLon}
+            recommendations={recommendations.map((place) => ({
+              lat: place.geometry.location.lat,
+              lng: place.geometry.location.lng,
+              name: place.name,
+              vicinity: place.vicinity,
+              icon: place.icon,
+            }))}
+          /> {/* Render the Map component with coordinates */}
+          <RecommendedPlaces places={recommendations} />
+        </>
       ) : (
         <div className="loader-map">Loading map...</div> // Display loading message while map is not ready
       )}

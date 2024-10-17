@@ -6,12 +6,24 @@ import {
   LayerGroup,
   Circle,
 } from 'react-leaflet';
+import L from 'leaflet'; // Import L from leaflet
 import './Map.scss';
+
+// Example path to your custom marker icon
+import customIconUrl from '../../assets/leaf-green.png';
 
 const Map = ({ IpLat, IpLon, geoLat, geoLon, recommendations }) => {
   
   let position = [];
   const fillBlueOptions = { fillColor: 'red', color: 'red' };
+
+  // Create a custom icon for highlighting the IP marker
+  const customIcon = new L.Icon({
+    iconUrl: customIconUrl, // Provide the path to your custom icon image
+    iconSize: [45, 61], // Adjust the size as needed
+    iconAnchor: [12, 41], // Anchor the icon to the bottom center (so it points correctly on the map)
+    popupAnchor: [1, -34], // Adjust popup position relative to the icon
+  });
 
   // Calculate the position to center the map
   if (geoLat && geoLon) {
@@ -37,8 +49,8 @@ const Map = ({ IpLat, IpLon, geoLat, geoLon, recommendations }) => {
           radius={6000}
         />
 
-        {/* Marker for the current IP position */}
-        <Marker position={[IpLat, IpLon]} icon={new L.Icon({ iconUrl: 'path/to/highlighted-marker-icon.png', iconSize: [25, 41] })}>
+        {/* Marker for the current IP position with custom icon */}
+        <Marker position={[IpLat, IpLon]} icon={customIcon}>
           <Popup>Your current IP position.</Popup>
         </Marker>
 
